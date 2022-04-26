@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "sourceMap": true,
+        "module": "es6",
+        "target": "es5",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports":true,
+        "lib": ["es2019", "dom"]
+    },
+    "include": [
+        "src",
+        "global.d.ts",
+        "typings"
+    ]
+}
