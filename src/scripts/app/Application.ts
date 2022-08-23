@@ -1,91 +1,98 @@
-import {
-    AppConfig,
-    Application as AstroApp,
-    gameResize,
-    Orientation,
-    OrientationPlugin,
-    PreloadPlugin,
-    ResizePlugin,
-    ResourcePlugin,
-    ScreensPlugin,
-    StagePlugin,
+import { BasisParser } from '@pixi/basis';
+import type {
+    AppConfig , 
+    OrientationPlugin,ScreensPlugin, 
+    SoundPlugin,
     StatsPlugin,
-    VisibilityPlugin,
-} from '@goodboydigital/astro';
+     VignettePlugin, 
+     VisibilityPlugin} from '@play-co/astro';
+import {        ResizePlugin} from '@play-co/astro';
+import { 
+     waitAFrame} from '@play-co/astro';
+import {
+    Application as AstroApp , 
+    gameResize,
+    ResourceManager, 
+    ResourcePlugin
+, 
+StagePlugin} from '@play-co/astro';
+import type { Texture } from 'pixi.js';
+import { SCALE_MODES } from 'pixi.js';
+import { Container } from 'pixi.js';
+import {Text } from 'pixi.js';
+import { Graphics,RenderTexture, Sprite } from 'pixi.js';
 
-import { Game } from '../game/Game';
 import manifest from '../manifest.json';
-import { Controller } from './Controller';
-import { GameScreen } from './screens/GameScreen';
-import { TitleScreen } from './screens/TitleScreen';
+import type { Controller } from './Controller';
 
-// NOTE: add this if you want to load spine files
-// addLoaderPlugins(loadSpine);
 
-export class Application extends AstroApp
-{
-    readonly width = 1664;
-    readonly height = 768;
+// const pixiManifest = convertManifest(manifest);
 
-    stats: StatsPlugin;
-    stage: StagePlugin;
-    resources: ResourcePlugin;
-    resize: ResizePlugin;
-    visibility: VisibilityPlugin;
-    screens: ScreensPlugin;
-    preloader: PreloadPlugin;
-    controller: Controller;
-    orientation: OrientationPlugin;
 
-    constructor(config: AppConfig)
-    {
+
+export class Application extends AstroApp {
+    public readonly width = 1664;
+    public readonly height = 768;
+
+    public stats!: StatsPlugin;
+    public stage!: StagePlugin;
+    public resources!: ResourcePlugin;
+    public resize!: ResizePlugin;
+    public visibility!: VisibilityPlugin;
+    public screens!: ScreensPlugin;
+    public controller!: Controller;
+    public orientation!: OrientationPlugin;
+    public vignette!: VignettePlugin;
+    public sound!: SoundPlugin;
+  
+    constructor(config: AppConfig) {
         super(config);
     }
 
-    public async run(): Promise<void>
-    {
-        this.resources = this.add(ResourcePlugin, { name: 'resource', manifest });
-        this.stage = this.add(StagePlugin, { name: 'stage' });
-        this.stats = this.add(StatsPlugin, { name: 'stats' });
-        this.visibility = this.add(VisibilityPlugin);
-        this.resize = this.add(ResizePlugin, { resizeFunction: gameResize(1024, 768) });
-        this.orientation = this.add(OrientationPlugin, {
-            imageUrl: 'assets/device/phone-turn.png',
-            backgroundColor: '#F5F0D1',
-            orientation: Orientation.LANDSCAPE,
+    public async run(): Promise<void> {
+
+        this.stage = this.add(StagePlugin);
+        this.resize = this.add(ResizePlugin, {gameResize});
+
+        this.resources = this.add(ResourcePlugin, {
+            name: 'resource',
+            manifest,
+            version: 'high',
         });
-        this.screens = this.add(ScreensPlugin, { name: 'screens' });
-        this.preloader = this.add(PreloadPlugin, { name: 'preload' });
-        this.controller = this.add(Controller);
 
-        this._addScreens();
-        this.init();
+        
+        await this.init();
+
+
+        await  this.resources.load('default');
+
+        const sprite = Sprite.from('pic-sensei.jpg')
+
+        sprite.anchor.set(0.5)
+        sprite.interactive = true;
+        sprite.buttonMode = true;
+
+        sprite.addListener('pointerdown', ()=>{
+           
+            const sprite =  Sprite.from('pic-sensei.jpg')
+
+            sprite.x = Math.random() * window.innerWidth
+            sprite.y = Math.random() * window.innerHeight
+            this.stage.stage.addChild(sprite);
+        });
+
+        sprite.scale.set(0.5)
+
+        this.stage.stage.addChild(sprite)
+        
+        sprite.x = window.innerWidth/2;
+        sprite.y = window.innerHeight/2;
+        
     }
 
-    private _addScreens(): void
-    {
-        this.screens.add(TitleScreen, {}, 'title');
-        this.screens.add(GameScreen, { game: Game }, 'game');
-    }
 
-    // stage position helpers
-    get stageLeft(): number
-    {
-        return -this.resize.width * 0.5;
-    }
+  
 
-    get stageRight(): number
-    {
-        return this.resize.width * 0.5;
-    }
-
-    get stageTop(): number
-    {
-        return -this.resize.height * 0.5;
-    }
-
-    get stageBottom(): number
-    {
-        return this.resize.height * 0.5;
-    }
+   
 }
+// ////

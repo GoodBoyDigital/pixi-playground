@@ -29,12 +29,19 @@ lib/
 dist/
 coverage/
 temp
-types
+.cdn-sdk.credentials
 .bulldog
 dev
 .links
 src/scripts/manifest.json
-
+build/
+.repos
+.env
+.replicant
+.replicantrc
+.vscode
 # jetBrains IDE ignores
 .idea
 .vs-code
+.connect-deps.json
+.connect-deps-cache

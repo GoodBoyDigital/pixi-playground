@@ -1,0 +1,10 @@
+.cache/*
+.replicant/*
+.vscode/*
+.history/*
+build/*
+dist/*
+src/assets/*
+src/scripts/manifest.json
+timestep-workspace/*
+package-lock.json

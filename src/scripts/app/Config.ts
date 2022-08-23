@@ -1,44 +1,36 @@
-import {
-    LoaderScreen,
-    PreloadOptions,
-    ScreenPluginOptions,
-    StageOptions,
-} from '@goodboydigital/astro';
+import type { ScreenPluginOptions, StageOptions } from '@play-co/astro';
+import { AlphaTransition } from '@play-co/astro';
 
-interface ConfigSettings
-{
-    stage: StageOptions
-    screens: ScreenPluginOptions
-    preload: PreloadOptions
+import { LoaderScreen } from './screens/LoaderScreen';
+
+interface ConfigSettings {
+    stage: StageOptions;
+    screens: ScreenPluginOptions;
 }
 
 const Config = {
     screens: {
         main: {
+            defaultTransitionClass: AlphaTransition,
             loaderScreenClass: LoaderScreen,
         },
         overlay: {
+            defaultTransitionClass: AlphaTransition,
             loaderScreenClass: LoaderScreen,
         },
     },
-    preload: {
-        loaderScreenClass: LoaderScreen,
+    stats: {
+        enabled: false,
     },
     stage: {
         alwaysOnAccessibility: false,
         accessibilityDebug: false,
-        backgroundColor: 0x0,
+        backgroundColor: 0x373737,
         clearBeforeRender: true,
-        resolution: 1,
+        resolution: 2,
         antialias: true,
+        forceCanvas: true,
     },
-    resource: {
-        basis: {
-            js: './basis/basis-transcoder.js',
-            wasm: './basis/basis-transcoder.wasm',
-        },
-    }
 } as ConfigSettings;
 
 export { Config };
-

@@ -1,35 +1,27 @@
-import { Plugin, ScreensPlugin, URLParams } from '@goodboydigital/astro';
+import { Plugin, ScreensPlugin } from '@play-co/astro';
 
 // this thing is in charge of overall state of the game
 // this includes, volume, pause, start/stop game
-export class Controller extends Plugin
-{
-    public screens: ScreensPlugin;
+export class Controller extends Plugin {
+    public screens!: ScreensPlugin;
 
-    init(): void
-    {
+    public init(): void {
         this.screens = this.app.get(ScreensPlugin);
     }
 
-    start(): void
-    {
-        this.startup();
+    public start(): void {
+        void this.startup();
     }
 
-    async startup(): Promise<void>
-    {
-        const screen = URLParams.get('screen') as string || 'title';
-
-        this.screens.goto(screen);
+    public async startup(): Promise<void> {
+        await this.toGame();
     }
 
-    async toGame(): Promise<void>
-    {
+    public async toGame(): Promise<void> {
         await this.screens.goto('game');
     }
 
-    async toTitle(): Promise<void>
-    {
-        await this.screens.goto('title');
+    public async toTitle(): Promise<void> {
+        await this.screens.overlay.goto('title');
     }
 }
